@@ -1,0 +1,3 @@
+# Exercises
+* [Part 1](part_1/README.md)
+* Coming Soon...
