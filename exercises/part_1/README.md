@@ -66,3 +66,5 @@ Congratulations, with that you have completed this exercise.
 kubectl delete svc nginx
 kubectl delete deployment nginx
 ```
+
+[Go back...](../README.md)
