@@ -87,3 +87,5 @@ Using the files under the `assets/` directory as templates modify them to try th
 * Use a different docker image that exposes a service in a different port
 * Try what happens if you change the value of the `selector` key in `assets/service.yaml` and then try to consume the service in your browser
 * Try creating a deployment that runs more than 1 container in a single pod
+
+[Go back...](../README.md)
