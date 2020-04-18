@@ -6,7 +6,7 @@ VT-x or AMD-v virtualization must be enabled in your computer’s BIOS.
 
 ## Requirements
 * [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-* Kubectl
+* [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
 ### Install VirtualBox
 Install the correct package for your system from the following link: https://www.virtualbox.org/wiki/Downloads
@@ -15,12 +15,10 @@ Install the correct package for your system from the following link: https://www
 Kubectl is the Kubernetes command-line tool to deploy and manage applications on Kubernetes. Using kubectl, you can inspect cluster resources; create, delete, and update components; and look at your new cluster and bring up example apps.
 
 ```
-sudo apt-get update && sudo apt-get install -y apt-transport-https
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-sudo touch /etc/apt/sources.list.d/kubernetes.list
-echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
-sudo apt-get update
-sudo apt-get install -y kubectl
+curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+kubectl version --client
 ```
 
 ## Installing Minikube
@@ -52,6 +50,10 @@ Starting cluster components...
 Kubectl is now configured to use the cluster.
 Loading cached images from config file.
 ```
+You may wish to launch the minikube VM with custom resource allocation, for that simply specify the number of cores and memory you want to assign to it like this:
+```
+minikube start --cpus 4 --memory 4096
+```
 Confirm your cluster is up by running `minikube status`
 ```
 minikube: Running
@@ -72,6 +74,9 @@ Run `minikube stop` to stop your local kubernetes cluster.
 Stopping local Kubernetes cluster...
 Machine stopped.
 ```
+
+### Delete Minikube VM
+To completely delete the minikube VM run `minikube delete`
 
 ## Next steps
 Now that you've completed this introduction please continue to the [Exercises section](exercises/README.md).

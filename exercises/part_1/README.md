@@ -4,16 +4,21 @@ For this section we will be launching a simple nginx into our Minikube cluster u
 ### Launching a Pod
 We can launch a single nginx pod with the following command:
 ```
-kubectl run nginx --image=nginx --image-pull-policy=Always --restart=Never
+kubectl run nginx --image=nginx:alpine --image-pull-policy=Always --restart=Never
 ```
-Check the status of your pod by running `kubectl get pods`. After a few seconds you should see something like this:
+Check the status of your pod by running `kubectl get pods`. Initially you should see something like this:
+```
+NAME    READY   STATUS              RESTARTS   AGE
+nginx   0/1     ContainerCreating   0          33s
+```
+After a few seconds run `kubectl get pods` again and the status should change to Running:
 ```
 NAME      READY     STATUS    RESTARTS   AGE
 nginx     1/1       Running   0          25s
 ```
 As of right now we have an nginx pod running. Just a small inconvenience, currently it is only accessible through the clusters private network; but no worries, we will fix it shortly. First let's test something, run `kubectl delete pod nginx` to stop the nginx pod we just launched and then run `kubectl get pods` again. You'll see this:
 ```
-No resources found.
+No resources found in default namespace.
 ```
 You can run `kubectl get pods` as many times as you want, our nginx pod is not coming back. Let's move on to the next section.
 
@@ -21,7 +26,7 @@ You can run `kubectl get pods` as many times as you want, our nginx pod is not c
 ### Deployment
 A Kubernetes Deployment checks on the health of Pods and restarts the Pod’s Container if necessary. Deployments are the recommended way to manage the creation and scaling of Pods. We can create a kubernetes deployment with the following command:
 ```
-kubectl run nginx --image=nginx:latest --port=80 --image-pull-policy=Always
+kubectl create deployment nginx --image=nginx:alpine
 ```
 Note that this time, two resources have been created, a `deployment` and a `pod`. We can see them by running `kubectl get pods,deployment`
 ```
@@ -31,7 +36,7 @@ nginx-6bfb654d7c-8s6b7   1/1       Running   0          1m
 NAME      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
 nginx     1         1         1            1           1m
 ```
-Let's try deleting our nginx pod. Let's copy the pod's name we get from running `kubectl get pods` and then run `kubectl delete pod <pod-name>`. Note that this time when we delete the pod its getting replaced by the deployment.
+Let's try deleting our nginx pod. Let's copy the pod's name we get from running `kubectl get pods` and then run `kubectl delete pod <pod-name>`. Note that this time when we delete the pod its getting replaced by the deployment immediately.
 ```
 NAME                     READY     STATUS        RESTARTS   AGE
 nginx-6bfb654d7c-8s6b7   0/1       Terminating   0          6m
@@ -42,7 +47,7 @@ So the deployment guarantees that we will always have one nginx pod running, but
 ### Service
 A Kubernetes Service is an abstraction which defines a logical set of Pods and a policy by which to access them, sometimes called a micro-service. We are going to expose our nginx pod by creating a service with the following command:
 ```
-kubectl expose deployment nginx --type=LoadBalancer
+kubectl expose deployment nginx --port 80 --type=LoadBalancer
 ```
 We can see the created service by running `kubectl get svc`
 ```
@@ -60,5 +65,4 @@ Congratulations, with that you have completed this exercise.
 ```
 kubectl delete svc nginx
 kubectl delete deployment nginx
-minikube stop
 ```
